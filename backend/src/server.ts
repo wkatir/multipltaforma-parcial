@@ -2,8 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes';
-import taskRoutes from './routes/taskRoutes';
-import categoryRoutes from './routes/categoryRoutes';
+import studentRoutes from './routes/studentRoutes';
+import professorRoutes from './routes/professorRoutes';
+import courseRoutes from './routes/courseRoutes';
+import enrollmentRoutes from './routes/enrollmentRoutes';
+import gradeRoutes from './routes/gradeRoutes';
 import { errorHandler } from './middleware/errorHandler';
 import { authLimiter, apiLimiter } from './middleware/rateLimiter';
 
@@ -21,11 +24,14 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth', authLimiter, authRoutes);
-app.use('/api/tasks', apiLimiter, taskRoutes);
-app.use('/api/categories', apiLimiter, categoryRoutes);
+app.use('/api/students', apiLimiter, studentRoutes);
+app.use('/api/professors', apiLimiter, professorRoutes);
+app.use('/api/courses', apiLimiter, courseRoutes);
+app.use('/api/enrollments', apiLimiter, enrollmentRoutes);
+app.use('/api/grades', apiLimiter, gradeRoutes);
 
 app.get('/', (_req, res) => {
-  res.json({ message: 'Task Manager API - Running' });
+  res.json({ message: 'University Management API - Running' });
 });
 
 app.use(errorHandler);
