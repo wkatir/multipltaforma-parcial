@@ -7,6 +7,7 @@ import professorRoutes from './routes/professorRoutes';
 import courseRoutes from './routes/courseRoutes';
 import enrollmentRoutes from './routes/enrollmentRoutes';
 import gradeRoutes from './routes/gradeRoutes';
+import statsRoutes from './routes/statsRoutes';
 import { errorHandler } from './middleware/errorHandler';
 import { authLimiter, apiLimiter } from './middleware/rateLimiter';
 
@@ -29,6 +30,7 @@ app.use('/api/professors', apiLimiter, professorRoutes);
 app.use('/api/courses', apiLimiter, courseRoutes);
 app.use('/api/enrollments', apiLimiter, enrollmentRoutes);
 app.use('/api/grades', apiLimiter, gradeRoutes);
+app.use('/api/stats', apiLimiter, statsRoutes);
 
 app.get('/', (_req, res) => {
   res.json({ message: 'University Management API - Running' });

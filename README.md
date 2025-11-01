@@ -1,38 +1,49 @@
-# Task Manager - Full Stack Application
+# University Management System - Full Stack Application
 
-A modern full-stack task management application built with React, Express, and Prisma.
+A comprehensive full-stack university management system built with modern technologies. Manage students, professors, courses, enrollments, and grades with a beautiful, responsive interface.
 
 ## Project Structure
 
 ```
 ├── backend/          # Express API server with Prisma ORM
 │   ├── src/         # TypeScript source files
+│   │   ├── controllers/  # Business logic for each entity
+│   │   ├── routes/       # API route definitions
+│   │   ├── middleware/   # Authentication, rate limiting, error handling
+│   │   └── config/       # Database configuration
 │   ├── prisma/      # Database schema and migrations
 │   └── package.json
 │
 └── frontend/        # React application with Vite
     ├── src/         # TypeScript source files
-    ├── components/  # React components
+    ├── components/  # Reusable React components
+    ├── hooks/       # Custom hooks for data fetching
+    ├── lib/         # Utilities and API client
     └── package.json
 ```
 
 ## Tech Stack Overview
 
 ### Backend
-- **Express**: REST API server
-- **Prisma**: ORM with SQLite database
-- **JWT**: Authentication
-- **TypeScript**: Type safety
+- **Express**: REST API server with middleware support
+- **Prisma**: Type-safe ORM with SQLite database
+- **JWT**: Secure authentication and authorization
+- **bcryptjs**: Password hashing
+- **express-rate-limit**: API rate limiting
+- **express-validator**: Request validation
+- **TypeScript**: Type safety and better developer experience
 
 ### Frontend
-- **React 19**: UI framework
-- **Vite**: Build tool
-- **TanStack Router**: Type-safe routing
-- **TanStack Query**: Server state management
-- **Zustand**: Client state management
-- **Tailwind CSS**: Styling
-- **Radix UI**: Accessible components
-- **TypeScript**: Type safety
+- **React 19**: Latest React version with improved performance
+- **Vite**: Lightning-fast build tool and development server
+- **TanStack Router**: Type-safe routing with file-based routing
+- **TanStack Query**: Powerful data fetching and caching
+- **Zustand**: Lightweight state management
+- **Tailwind CSS**: Utility-first CSS framework
+- **Radix UI**: Accessible, customizable UI components
+- **React Hook Form + Zod**: Form handling with validation
+- **Recharts**: Data visualization components
+- **TypeScript**: Type safety across the entire frontend
 
 ## Quick Start Guide
 
@@ -94,10 +105,13 @@ http://localhost:5173
 ```
 
 You can now:
-1. Register a new user account
+1. Register a new admin user account
 2. Login with your credentials
-3. Create, edit, and manage tasks
-4. Toggle between light/dark themes
+3. Manage students, professors, and courses
+4. Create and track enrollments
+5. Record and manage grades
+6. View comprehensive statistics and analytics
+7. Toggle between light/dark themes
 
 ## Development Workflow
 
@@ -187,27 +201,71 @@ rm -rf node_modules pnpm-lock.yaml
 pnpm install
 ```
 
+## Features
+
+### 🎓 Student Management
+- Complete CRUD operations for students
+- Advanced filtering by status, career, enrollment date
+- Search functionality across multiple fields
+- Detailed student profiles with enrollment history
+
+### 👨‍🏫 Professor Management
+- Full professor lifecycle management
+- Department and specialty tracking
+- Course assignment capabilities
+- Status management (Active/Inactive)
+
+### 📚 Course Management
+- Comprehensive course catalog
+- Professor assignment and capacity management
+- Semester and schedule tracking
+- Enrollment monitoring
+
+### 📝 Enrollment System
+- Student-course enrollment management
+- Enrollment status tracking (Enrolled/Dropped/Completed)
+- Capacity validation
+- Historical enrollment data
+
+### 📊 Grade Management
+- Multi-partial grade recording
+- Final grade calculation and approval
+- Grade status tracking (Pending/Approved/Failed)
+- Detailed grade comments and feedback
+
+### 📈 Analytics & Statistics
+- University-wide statistics dashboard
+- Enrollment trends and patterns
+- Course utilization metrics
+- Student performance analytics
+
+### 🔐 Security Features
+- JWT-based authentication
+- Password hashing with bcryptjs
+- Role-based access control
+- API rate limiting
+- Request validation and sanitization
+
+### 🎨 User Experience
+- Modern, responsive design
+- Dark/Light theme support
+- Accessible UI components
+- Real-time data updates
+- Comprehensive error handling
+
 ## Architecture Highlights
 
 ### Why These Technologies?
 
-**Express**: Minimal, flexible, and widely adopted Node.js framework perfect for REST APIs.
+**Express + Prisma**: Robust backend foundation with type-safe database operations, perfect for complex university data relationships and business logic.
 
-**Prisma**: Modern ORM with excellent TypeScript support, type-safe queries, and automated migrations.
+**React 19 + TypeScript**: Latest React features with complete type safety, ensuring reliable frontend development for complex forms and data management.
 
-**React 19**: Latest React version with improved performance and developer experience.
+**TanStack Query**: Essential for handling complex server state in educational applications with real-time updates and caching.
 
-**Vite**: Extremely fast build tool that significantly improves development experience.
+**Tailwind CSS + Radix UI**: Beautiful, accessible design system that works perfectly for administrative interfaces requiring both functionality and aesthetics.
 
-**TanStack Router**: Type-safe routing eliminates common routing bugs.
+**Zustand + TanStack Router**: Lightweight, performant state management and routing that scales well with growing application complexity.
 
-**TanStack Query**: Simplifies server state management, caching, and data synchronization.
-
-**Zustand**: Simple and lightweight state management without boilerplate.
-
-**Tailwind CSS**: Utility-first approach enables rapid UI development.
-
-**Radix UI**: Provides accessible, unstyled components that can be fully customized.
-
-**TypeScript**: Type safety across the entire stack reduces bugs and improves maintainability.
+This technology stack provides the reliability, performance, and developer experience needed for a production university management system.
 

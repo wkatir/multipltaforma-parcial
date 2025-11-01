@@ -3,11 +3,67 @@ import prisma from '../config/database';
 
 export const getAllStudents = async (req: Request, res: Response) => {
   try {
-    const students = await prisma.student.findMany({
-      orderBy: { createdAt: 'desc' },
+    const {
+      status,
+      search,
+      sortBy = 'createdAt',
+      order = 'desc',
+      page = '1',
+      limit = '10',
+      career
+    } = req.query;
+
+    const pageNum = parseInt(page as string);
+    const limitNum = parseInt(limit as string);
+    const skip = (pageNum - 1) * limitNum;
+
+    // Build where clause
+    const where: any = {};
+
+    if (status && status !== 'all') {
+      where.status = status;
+    }
+
+    if (career) {
+      where.career = { contains: career as string, mode: 'insensitive' };
+    }
+
+    if (search) {
+      where.OR = [
+        { firstName: { contains: search as string, mode: 'insensitive' } },
+        { lastName: { contains: search as string, mode: 'insensitive' } },
+        { carnet: { contains: search as string, mode: 'insensitive' } },
+        { email: { contains: search as string, mode: 'insensitive' } },
+      ];
+    }
+
+    // Build orderBy
+    const orderBy: any = {};
+    orderBy[sortBy as string] = order === 'asc' ? 'asc' : 'desc';
+
+    const [students, total] = await Promise.all([
+      prisma.student.findMany({
+        where,
+        orderBy,
+        skip,
+        take: limitNum,
+      }),
+      prisma.student.count({ where })
+    ]);
+
+    const totalPages = Math.ceil(total / limitNum);
+
+    res.json({
+      students,
+      pagination: {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages
+      }
     });
-    res.json(students);
   } catch (error) {
+    console.error('Error fetching students:', error);
     res.status(500).json({ error: 'Error fetching students' });
   }
 };
@@ -108,9 +164,9 @@ export const searchStudents = async (req: Request, res: Response) => {
     const students = await prisma.student.findMany({
       where: {
         OR: [
-          { firstName: { contains: q as string, mode: 'insensitive' } },
-          { lastName: { contains: q as string, mode: 'insensitive' } },
-          { carnet: { contains: q as string, mode: 'insensitive' } },
+          { firstName: { contains: q as string } },
+          { lastName: { contains: q as string } },
+          { carnet: { contains: q as string } },
         ],
       },
     });

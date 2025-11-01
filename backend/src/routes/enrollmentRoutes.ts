@@ -9,7 +9,7 @@ import {
 } from '../controllers/enrollmentController';
 import { authMiddleware } from '../middleware/auth';
 
-const router = Router();
+const router: Router = Router();
 
 router.use(authMiddleware);
 

@@ -2,9 +2,12 @@ import * as React from "react"
 import { Link } from "@tanstack/react-router"
 import {
   IconInnerShadowTop,
-  IconListDetails,
   IconChartBar,
-  IconCategory,
+  IconUsers,
+  IconUserCog,
+  IconBook,
+  IconUserCheck,
+  IconClipboardList,
 } from "@tabler/icons-react"
 
 import { NavMain } from "@/components/layout/nav-main"
@@ -28,14 +31,29 @@ const data = {
       icon: IconChartBar,
     },
     {
-      title: "Tasks",
-      url: "/tasks",
-      icon: IconListDetails,
+      title: "Students",
+      url: "/students",
+      icon: IconUsers,
     },
     {
-      title: "Categories",
-      url: "/categories",
-      icon: IconCategory,
+      title: "Professors",
+      url: "/professors",
+      icon: IconUserCog,
+    },
+    {
+      title: "Courses",
+      url: "/courses",
+      icon: IconBook,
+    },
+    {
+      title: "Enrollments",
+      url: "/enrollments",
+      icon: IconUserCheck,
+    },
+    {
+      title: "Grades",
+      url: "/grades",
+      icon: IconClipboardList,
     },
   ]
 }
@@ -54,7 +72,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             >
               <Link to="/dashboard">
                 <IconInnerShadowTop size={20} />
-                <span className="text-base font-semibold">Task Manager</span>
+                <span className="text-base font-semibold">University Management</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

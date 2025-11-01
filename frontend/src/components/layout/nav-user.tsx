@@ -40,7 +40,7 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar()
   const { logout } = useAuth()
-  const { theme, setTheme } = useTheme()
+  const { setTheme } = useTheme()
 
   const getInitials = (name: string): string => {
     return name

@@ -3,15 +3,66 @@ import prisma from '../config/database';
 
 export const getAllEnrollments = async (req: Request, res: Response) => {
   try {
-    const enrollments = await prisma.enrollment.findMany({
-      include: {
-        student: true,
-        course: true,
-      },
-      orderBy: { enrollmentDate: 'desc' },
+    const {
+      status,
+      sortBy = 'enrollmentDate',
+      order = 'desc',
+      page = '1',
+      limit = '10',
+      studentId,
+      courseId
+    } = req.query;
+
+    const pageNum = parseInt(page as string);
+    const limitNum = parseInt(limit as string);
+    const skip = (pageNum - 1) * limitNum;
+
+    // Build where clause
+    const where: any = {};
+
+    if (status && status !== 'all') {
+      where.status = status;
+    }
+
+    if (studentId) {
+      where.studentId = parseInt(studentId as string);
+    }
+
+    if (courseId) {
+      where.courseId = parseInt(courseId as string);
+    }
+
+    // Build orderBy
+    const orderBy: any = {};
+    orderBy[sortBy as string] = order === 'asc' ? 'asc' : 'desc';
+
+    const [enrollments, total] = await Promise.all([
+      prisma.enrollment.findMany({
+        where,
+        include: {
+          student: true,
+          course: true,
+        },
+        orderBy,
+        skip,
+        take: limitNum,
+      }),
+      prisma.enrollment.count({ where })
+    ]);
+
+    const totalPages = Math.ceil(total / limitNum);
+
+    res.json({
+      enrollments,
+      pagination: {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages
+      }
     });
-    res.json(enrollments);
   } catch (error) {
+    console.error('Error fetching enrollments:', error);
     res.status(500).json({ error: 'Error fetching enrollments' });
   }
 };

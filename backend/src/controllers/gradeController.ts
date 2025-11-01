@@ -3,14 +3,66 @@ import prisma from '../config/database';
 
 export const getAllGrades = async (req: Request, res: Response) => {
   try {
-    const grades = await prisma.grade.findMany({
-      include: {
-        student: true,
-        course: true,
-      },
+    const {
+      status,
+      sortBy = 'createdAt',
+      order = 'desc',
+      page = '1',
+      limit = '10',
+      studentId,
+      courseId
+    } = req.query;
+
+    const pageNum = parseInt(page as string);
+    const limitNum = parseInt(limit as string);
+    const skip = (pageNum - 1) * limitNum;
+
+    // Build where clause
+    const where: any = {};
+
+    if (status && status !== 'all') {
+      where.status = status;
+    }
+
+    if (studentId) {
+      where.studentId = parseInt(studentId as string);
+    }
+
+    if (courseId) {
+      where.courseId = parseInt(courseId as string);
+    }
+
+    // Build orderBy
+    const orderBy: any = {};
+    orderBy[sortBy as string] = order === 'asc' ? 'asc' : 'desc';
+
+    const [grades, total] = await Promise.all([
+      prisma.grade.findMany({
+        where,
+        include: {
+          student: true,
+          course: true,
+        },
+        orderBy,
+        skip,
+        take: limitNum,
+      }),
+      prisma.grade.count({ where })
+    ]);
+
+    const totalPages = Math.ceil(total / limitNum);
+
+    res.json({
+      grades,
+      pagination: {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages
+      }
     });
-    res.json(grades);
   } catch (error) {
+    console.error('Error fetching grades:', error);
     res.status(500).json({ error: 'Error fetching grades' });
   }
 };

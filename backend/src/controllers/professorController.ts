@@ -3,14 +3,71 @@ import prisma from '../config/database';
 
 export const getAllProfessors = async (req: Request, res: Response) => {
   try {
-    const professors = await prisma.professor.findMany({
-      include: {
-        courses: true,
-      },
-      orderBy: { createdAt: 'desc' },
+    const {
+      status,
+      search,
+      sortBy = 'createdAt',
+      order = 'desc',
+      page = '1',
+      limit = '10',
+      department
+    } = req.query;
+
+    const pageNum = parseInt(page as string);
+    const limitNum = parseInt(limit as string);
+    const skip = (pageNum - 1) * limitNum;
+
+    // Build where clause
+    const where: any = {};
+
+    if (status && status !== 'all') {
+      where.status = status;
+    }
+
+    if (department) {
+      where.department = { contains: department as string, mode: 'insensitive' };
+    }
+
+    if (search) {
+      where.OR = [
+        { firstName: { contains: search as string, mode: 'insensitive' } },
+        { lastName: { contains: search as string, mode: 'insensitive' } },
+        { employeeId: { contains: search as string, mode: 'insensitive' } },
+        { email: { contains: search as string, mode: 'insensitive' } },
+        { specialty: { contains: search as string, mode: 'insensitive' } },
+      ];
+    }
+
+    // Build orderBy
+    const orderBy: any = {};
+    orderBy[sortBy as string] = order === 'asc' ? 'asc' : 'desc';
+
+    const [professors, total] = await Promise.all([
+      prisma.professor.findMany({
+        where,
+        include: {
+          courses: true,
+        },
+        orderBy,
+        skip,
+        take: limitNum,
+      }),
+      prisma.professor.count({ where })
+    ]);
+
+    const totalPages = Math.ceil(total / limitNum);
+
+    res.json({
+      professors,
+      pagination: {
+        total,
+        page: pageNum,
+        limit: limitNum,
+        totalPages
+      }
     });
-    res.json(professors);
   } catch (error) {
+    console.error('Error fetching professors:', error);
     res.status(500).json({ error: 'Error fetching professors' });
   }
 };

@@ -17,7 +17,7 @@ export const useAuth = () => {
     onSuccess: (data: AuthResponse) => {
       setAuth(data.user, data.token)
       toast.success('Welcome back!')
-      navigate({ to: '/tasks' })
+      navigate({ to: '/dashboard' })
     },
     onError: (error: any) => {
       const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Invalid credentials'
@@ -33,7 +33,7 @@ export const useAuth = () => {
     onSuccess: (data: AuthResponse) => {
       setAuth(data.user, data.token)
       toast.success('Account created successfully!')
-      navigate({ to: '/tasks' })
+      navigate({ to: '/dashboard' })
     },
     onError: (error: any) => {
       const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Failed to create account'
